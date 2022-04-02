@@ -52,7 +52,7 @@ const COLOR_MAPPINGS = {
 
 (async function () {
 	GM_addStyle(GM_getResourceText('TOASTIFY_CSS'));
-	canvas.width = 1000;
+	canvas.width = 2000;
 	canvas.height = 1000;
 	canvas = document.body.appendChild(canvas);
 
@@ -91,8 +91,8 @@ function getPixelList() {
 async function attemptPlace() {
 	var ctx;
 	try {
-		const canvasUrl = await getCurrentImageUrl();
-		ctx = await getCanvasFromUrl(canvasUrl);
+		ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), canvas, 0, 0);
+		ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), canvas, 1000, 0)
 	} catch (e) {
 		console.warn('Fehler beim Abrufen der Zeichenfläche:', e);
 		Toastify({
@@ -210,11 +210,11 @@ async function place(x, y, color) {
 					'actionName': 'r/replace:set_pixel',
 					'PixelMessageData': {
 						'coordinate': {
-							'x': x,
-							'y': y
+							'x': x % 1000,
+							'y': y % 1000
 						},
 						'colorIndex': color,
-						'canvasIndex': 0
+						'canvasIndex': (x > 999 ? 1 : 0)
 					}
 				}
 			},
@@ -272,7 +272,7 @@ async function getAccessToken() {
 	return responseText.split('\"accessToken\":\"')[1].split('"')[0];
 }
 
-async function getCurrentImageUrl() {
+async function getCurrentImageUrl(id = '0') {
 	return new Promise((resolve, reject) => {
 		const ws = new WebSocket('wss://gql-realtime-2.reddit.com/query', 'graphql-ws');
 
@@ -292,7 +292,7 @@ async function getCurrentImageUrl() {
 							'channel': {
 								'teamOwner': 'AFD2022',
 								'category': 'CANVAS',
-								'tag': '0'
+								'tag': id
 							}
 						}
 					},
@@ -328,7 +328,7 @@ async function getCurrentImageUrl() {
 			if (!parsed.payload || !parsed.payload.data || !parsed.payload.data.subscribe || !parsed.payload.data.subscribe.data) return;
 
 			ws.close();
-			resolve(parsed.payload.data.subscribe.data.name);
+			resolve(parsed.payload.data.subscribe.data.name + `?noCache=${Date.now() * Math.random()}`);
 		}
 
 
@@ -336,13 +336,13 @@ async function getCurrentImageUrl() {
 	});
 }
 
-function getCanvasFromUrl(url) {
+function getCanvasFromUrl(url, canvas, x = 0, y = 0) {
 	return new Promise((resolve, reject) => {
 		var ctx = canvas.getContext('2d');
 		var img = new Image();
 		img.crossOrigin = 'anonymous';
 		img.onload = () => {
-			ctx.drawImage(img, 0, 0);
+			ctx.drawImage(img, x, y);
 			resolve(ctx);
 		};
 		img.onerror = reject;
