@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PlaceDE Bot
 // @namespace    https://github.com/PlaceDE/Bot
-// @version      9
+// @version      10
 // @description  /r/place bot
 // @author       NoahvdAa, reckter, SgtChrome, nama17
 // @match        https://www.reddit.com/r/place/*
@@ -21,7 +21,7 @@ var placeOrders = [];
 var accessToken;
 var canvas = document.createElement('canvas');
 
-const VERSION = 9
+const VERSION = 10
 var UPDATE_PENDING = false;
 
 const COLOR_MAPPINGS = {
@@ -136,7 +136,7 @@ async function attemptPlace() {
 }
 
 function updateOrders() {
-	fetch('https://placede.github.io/pixel/pixel.json').then(async (response) => {
+	fetch(`https://placede.github.io/pixel/pixel.json`, {cache: "no-store"}).then(async (response) => {
 		if (!response.ok) return console.warn('Bestellungen können nicht geladen werden!');
 		const data = await response.json();
 
