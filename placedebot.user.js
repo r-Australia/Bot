@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PlaceDE Bot
 // @namespace    https://github.com/PlaceDE/Bot
-// @version      12
+// @version      13
 // @description  /r/place bot
 // @author       NoahvdAa, reckter, SgtChrome, nama17
 // @match        https://www.reddit.com/r/place/*
@@ -21,7 +21,7 @@ var placeOrders = [];
 var accessToken;
 var canvas = document.createElement('canvas');
 
-const VERSION = 12
+const VERSION = 13
 var UPDATE_PENDING = false;
 
 const COLOR_MAPPINGS = {
@@ -48,7 +48,7 @@ const COLOR_MAPPINGS = {
 	'#000000': 27,
 	'#898D90': 29,
 	'#D4D7D9': 30,
-	'#E9EBED': 31
+	'#FFFFFF': 31
 };
 
 (async function () {
