@@ -142,7 +142,7 @@ async function attemptPlace() {
 	}
 
 	if	(foundPixel) {
-		console..log( `${wrongCount} sind noch falsch`)
+		console.log( `${wrongCount} sind noch falsch`)
 		return
 	}
 
