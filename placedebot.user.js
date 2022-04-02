@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PlaceDE Bot
 // @namespace    https://github.com/PlaceDE/Bot
-// @version      10
+// @version      11
 // @description  /r/place bot
 // @author       NoahvdAa, reckter, SgtChrome, nama17
 // @match        https://www.reddit.com/r/place/*
@@ -113,10 +113,17 @@ async function attemptPlace() {
 			text: `Pixel wird gesetzt auf ${x}, ${y}...`,
 			duration: 10000
 		}).showToast();
-		const nextAvailablePixelTimestamp = await place(x, y, colorId) ?? new Date(Date.now().valueOf() + 1000 * 60 * 5 + 1000 * 15)
+
+		const time = new Date().getTime();
+		let nextAvailablePixelTimestamp = await place(x, y, colorId) ?? new Date(time + 1000 * 60 * 5 + 1000 * 15)
+
+		// Sanity check timestamp
+		if (nextAvailablePixelTimestamp < time || nextAvailablePixelTimestamp > time + 1000 * 60 * 5 + 1000 * 15) {
+			nextAvailablePixelTimestamp = time + 1000 * 60 * 5 + 1000 * 15;
+		}
 
 		// Add a few random seconds to the next available pixel timestamp
-		const waitFor = nextAvailablePixelTimestamp - Date.now() + (Math.random() * 1000 * 15);
+		const waitFor = nextAvailablePixelTimestamp - time + (Math.random() * 1000 * 15);
 
 		const minutes = Math.floor(waitFor / (1000 * 60))
 		const seconds = Math.floor((waitFor / 1000) % 60)
@@ -124,7 +131,7 @@ async function attemptPlace() {
 			text: `Warten auf Abkühlzeit ${minutes}:${seconds} bis ${new Date(nextAvailablePixelTimestamp).toLocaleTimeString()}`,
 			duration: waitFor
 		}).showToast();
-		setTimeout(attemptPlace, waitFor); // 5min en 15sec, just to be safe.
+		setTimeout(attemptPlace, waitFor);
 		return;
 	}
 
