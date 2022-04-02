@@ -193,7 +193,30 @@ async function place(x, y, color) {
 					}
 				}
 			},
-			'query': 'mutation setPixel($input: ActInput!) {\n  act(input: $input) {\n    data {\n      ... on BasicMessage {\n        id\n        data {\n          ... on GetUserCooldownResponseMessageData {\n            nextAvailablePixelTimestamp\n            __typename\n          }\n          ... on SetPixelResponseMessageData {\n            timestamp\n            __typename\n          }\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n'
+			'query': `mutation setPixel($input: ActInput!) {
+				act(input: $input) {
+					data {
+						... on BasicMessage {
+							id
+							data {
+								... on GetUserCooldownResponseMessageData {
+									nextAvailablePixelTimestamp
+									__typename
+								}
+								... on SetPixelResponseMessageData {
+									timestamp
+									__typename
+								}
+								__typename
+							}
+							__typename
+						}
+						__typename
+					}
+					__typename
+				}
+			}
+			`
 		}),
 		headers: {
 			'origin': 'https://hot-potato.reddit.com',
@@ -250,7 +273,24 @@ async function getCurrentImageUrl() {
 					},
 					'extensions': {},
 					'operationName': 'replace',
-					'query': 'subscription replace($input: SubscribeInput!) {\n  subscribe(input: $input) {\n    id\n    ... on BasicMessage {\n      data {\n        __typename\n        ... on FullFrameMessageData {\n          __typename\n          name\n          timestamp\n        }\n      }\n      __typename\n    }\n    __typename\n  }\n}'
+					'query': `subscription replace($input: SubscribeInput!) {
+						subscribe(input: $input) {
+							id
+							... on BasicMessage {
+								data {
+									__typename
+									... on FullFrameMessageData {
+										__typename
+										name
+										timestamp
+									}
+								}
+								__typename
+							}
+							__typename
+						}
+					}
+					`
 				}
 			}));
 		};
