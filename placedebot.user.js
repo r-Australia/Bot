@@ -21,7 +21,7 @@ var placeOrders = [];
 var accessToken;
 var canvas = document.createElement('canvas');
 
-const VERSION = 10
+const VERSION = 11
 var UPDATE_PENDING = false;
 
 const COLOR_MAPPINGS = {
