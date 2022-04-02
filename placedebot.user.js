@@ -142,10 +142,7 @@ async function attemptPlace() {
 	}
 
 	if	(foundPixel) {
-		Toastify({
-			text: `${wrongCount} sind noch falsch`,
-			duration: 10000
-		}).showToast();
+		console..log( `${wrongCount} sind noch falsch`)
 		return
 	}
 
