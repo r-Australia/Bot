@@ -98,6 +98,9 @@ async function attemptPlace() {
 
 	const pixelList = getPixelList();
 
+	let foundPixel = false;
+	let wrongCount = 0;
+
 	for (const order of pixelList) {
 		const x = order.x;
 		const y = order.y;
@@ -108,6 +111,10 @@ async function attemptPlace() {
 		const currentColorId = COLOR_MAPPINGS[hex];
 		// Pixel already set
 		if (currentColorId == colorId) continue;
+		wrongCount++;
+
+		if (foundPixel) continue;
+		foundPixel = true;
 
 		Toastify({
 			text: `Pixel wird gesetzt auf ${x}, ${y}...`,
@@ -132,7 +139,11 @@ async function attemptPlace() {
 			duration: waitFor
 		}).showToast();
 		setTimeout(attemptPlace, waitFor);
-		return;
+	}
+
+	if	(foundPixel) {
+		console.log( `${wrongCount} sind noch falsch`)
+		return
 	}
 
 	Toastify({
