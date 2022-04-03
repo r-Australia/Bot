@@ -106,7 +106,6 @@ async function attemptPlace() {
 
 	const pixelList = getPixelList();
 
-	let foundPixel = false;
 	let wrongCount = 0;
 
 	for (const order of pixelList) {
@@ -120,9 +119,6 @@ async function attemptPlace() {
 		// Pixel already set
 		if (currentColorId == colorId) continue;
 		wrongCount++;
-
-		if (foundPixel) continue;
-		foundPixel = true;
 
 		Toastify({
 			text: `Pixel wird gesetzt auf ${x}, ${y}...`,
@@ -147,17 +143,9 @@ async function attemptPlace() {
 			duration: waitFor
 		}).showToast();
 		setTimeout(attemptPlace, waitFor);
+		break;
 	}
-
-	if	(foundPixel) {
-		console.log( `${wrongCount} sind noch falsch`)
-		return
-	}
-
-	Toastify({
-		text: 'Alle bestellten Pixel haben bereits die richtige Farbe!',
-		duration: 10000
-	}).showToast();
+	
 	setTimeout(attemptPlace, 30000); // probeer opnieuw in 30sec.
 }
 
