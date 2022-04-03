@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PlaceDE Bot
 // @namespace    https://github.com/PlaceDE/Bot
-// @version      13
+// @version      14
 // @description  /r/place bot
 // @author       NoahvdAa, reckter, SgtChrome, nama17
 // @match        https://www.reddit.com/r/place/*
@@ -21,7 +21,7 @@ var placeOrders = [];
 var accessToken;
 var canvas = document.createElement('canvas');
 
-const VERSION = 13
+const VERSION = 14
 var UPDATE_PENDING = false;
 
 const COLOR_MAPPINGS = {
@@ -106,8 +106,6 @@ async function attemptPlace() {
 
 	const pixelList = getPixelList();
 
-	let wrongCount = 0;
-
 	for (const order of pixelList) {
 		const x = order.x;
 		const y = order.y;
@@ -118,7 +116,6 @@ async function attemptPlace() {
 		const currentColorId = COLOR_MAPPINGS[hex];
 		// Pixel already set
 		if (currentColorId == colorId) continue;
-		wrongCount++;
 
 		Toastify({
 			text: `Pixel wird gesetzt auf ${x}, ${y}...`,
