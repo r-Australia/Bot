@@ -140,7 +140,7 @@ async function attemptPlace() {
 			duration: waitFor
 		}).showToast();
 		setTimeout(attemptPlace, waitFor);
-		break;
+		return;
 	}
 	
 	setTimeout(attemptPlace, 30000); // probeer opnieuw in 30sec.
