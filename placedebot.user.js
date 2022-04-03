@@ -1,7 +1,7 @@
 // ==UserScript==
-// @name         PlaceDE Bot
-// @namespace    https://github.com/PlaceDE/Bot
-// @version      14
+// @name         PlaceAU Bot
+// @namespace    https://github.com/r-Australia/Bot/
+// @version      15
 // @description  /r/place bot
 // @author       NoahvdAa, reckter, SgtChrome, nama17
 // @match        https://www.reddit.com/r/place/*
@@ -9,8 +9,8 @@
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @require	     https://cdn.jsdelivr.net/npm/toastify-js
 // @resource     TOASTIFY_CSS https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css
-// @updateURL    https://github.com/PlaceDE/Bot/raw/main/placedebot.user.js
-// @downloadURL  https://github.com/PlaceDE/Bot/raw/main/placedebot.user.js
+// @updateURL    https://github.com/r-Australia/Bot/raw/main/placedebot.user.js
+// @downloadURL  https://github.com/r-Australia/Bot/raw/main/placedebot.user.js
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -95,9 +95,9 @@ async function attemptPlace() {
 		ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), canvas, 0, 0);
 		ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), canvas, 1000, 0)
 	} catch (e) {
-		console.warn('Fehler beim Abrufen der Zeichenfläche:', e);
+		console.warn('Error getting canvas:', e);
 		Toastify({
-			text: 'Fehler beim Abrufen der Zeichenfläche. Neuer Versuch in 15 Sekunden...',
+			text: 'Error getting canvas. Please try again in 15 seconds.',
 			duration: 10000
 		}).showToast();
 		setTimeout(attemptPlace, 15000); // probeer opnieuw in 15sec.
@@ -147,8 +147,8 @@ async function attemptPlace() {
 }
 
 function updateOrders() {
-	fetch(`https://placede.github.io/pixel/pixel.json`, {cache: "no-store"}).then(async (response) => {
-		if (!response.ok) return console.warn('Bestellungen können nicht geladen werden!');
+	fetch(`https://r-australia.github.io/pixel/pixel.json`, {cache: "no-store"}).then(async (response) => {
+		if (!response.ok) return console.warn('Cannot load pixel orders!');
 		const data = await response.json();
 
 		if (JSON.stringify(data) !== JSON.stringify(placeOrders)) {
@@ -158,7 +158,7 @@ function updateOrders() {
 				pixelCount += data.structures[structureName].pixels.length;
 			}
 			Toastify({
-				text: `Neue Strukturen geladen. Bilder: ${structureCount} - Pixels: ${pixelCount}.`,
+				text: `New images loaded. Pictures: ${structureCount} - Pixels: ${pixelCount}.`,
 				duration: 10000
 			}).showToast();
 		}
@@ -166,17 +166,17 @@ function updateOrders() {
 		if (data?.version !== VERSION && !UPDATE_PENDING) {
 			UPDATE_PENDING = true
 			Toastify({
-				text: `NEUE VERSION VERFÜGBAR! Aktualisiere hier https://github.com/placeDE/Bot/raw/main/placedebot.user.js`,
+				text: `New Version Available! Update from: https://github.com/r-Australia/Bot/raw/main/placedebot.user.js`,
 				duration: -1,
 				onClick: () => {
 					// Tapermonkey captures this and opens a new tab
-					window.location = 'https://github.com/placeDE/Bot/raw/main/placedebot.user.js'
+					window.location = 'https://github.com/r-Australia/Bot/raw/main/placedebot.user.js'
 				}
 			}).showToast();
 
 		}
 		placeOrders = data;
-	}).catch((e) => console.warn('Bestellungen können nicht geladen werden!', e));
+	}).catch((e) => console.warn('Cannot load pixel orders!', e));
 }
 
 /**
@@ -240,7 +240,7 @@ async function place(x, y, color) {
 	const data = await response.json()
 	if (data.errors != undefined) {
 		Toastify({
-			text: 'Fehler beim Platzieren des Pixels, warte auf Abkühlzeit...',
+			text: 'Cannot place pixel. Waiting for cooldown...',
 			duration: 10000
 		}).showToast();
 		return data.errors[0].extensions?.nextAvailablePixelTs
